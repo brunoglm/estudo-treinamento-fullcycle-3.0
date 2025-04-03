@@ -8,10 +8,6 @@ describe('Uuid Unit Tests', () => {
     validateSpy = jest.spyOn(Uuid.prototype as any, 'validate');
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test('should throw error when uuid is invalid', () => {
     expect(() => new Uuid('invalid-uuid')).toThrow(new InvalidUUIDError());
     expect(validateSpy).toHaveBeenCalledTimes(1);

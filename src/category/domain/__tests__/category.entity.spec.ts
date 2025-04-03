@@ -1,6 +1,13 @@
+import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
 import { Category } from '../category.entity';
 
 describe('Category Unit Tests', () => {
+  let validateSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category, 'validate');
+  });
+
   describe('create command', () => {
     test('constructor', () => {
       const category = new Category({
@@ -26,6 +33,18 @@ describe('Category Unit Tests', () => {
       expect(category.description).toBe('A movie category');
       expect(category.is_active).toBeTruthy();
       expect(category.created_at).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
+    });
+
+    test('should throw error when name is empty', () => {
+      try {
+        Category.create({
+          name: null,
+        })
+      } catch (error) {
+
+      }
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
   });
 
