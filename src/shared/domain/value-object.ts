@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 export abstract class ValueObject<T> {
   private readonly _value: T;
 
-  constructor(value: T) {
+  constructor(value?: T) {
     this._value = value;
   }
 
