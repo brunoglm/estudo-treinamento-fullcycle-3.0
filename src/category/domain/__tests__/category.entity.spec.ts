@@ -37,13 +37,15 @@ describe('Category Unit Tests', () => {
     });
 
     test('should throw error when name is empty', () => {
-      try {
-        Category.create({
-          name: null,
-        })
-      } catch (error) {
-
-      }
+      expect(() => Category.create({
+        name: null,
+      })).containsErrorMessages({
+        name: [
+          'name should not be empty',
+          'name must be a string',
+          'name must be shorter than or equal to 255 characters',
+        ],
+      });
       expect(validateSpy).toHaveBeenCalledTimes(1);
     });
   });
