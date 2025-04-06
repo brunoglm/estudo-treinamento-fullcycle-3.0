@@ -1,13 +1,11 @@
 import { Op, literal } from 'sequelize';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { CategoryModel } from './category.model';
-import { SearchParams, SortDirection } from '../../../../shared/domain/repository/search-params';
-import { ICategoryRepository } from '../../../domain/category.repository';
+import { SortDirection } from '../../../../shared/domain/repository/search-params';
+import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from '../../../domain/category.repository';
 import { Category } from '../../../domain/category.entity';
 import { CategoryModelMapper } from './category-model-mapper';
 import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import { Entity } from '../../../../shared/domain/entity';
-import { SearchResult } from '../../../../shared/domain/repository/search-result';
 
 export class CategorySequelizeRepository implements ICategoryRepository {
   sortableFields: string[] = ['name', 'created_at'];
@@ -115,42 +113,39 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     });
   }
 
-  // async search(props: CategorySearchParams): Promise<CategorySearchResult> {
-  //   const offset = (props.page - 1) * props.per_page;
-  //   const limit = props.per_page;
-  //   const { rows: models, count } = await this.categoryModel.findAndCountAll({
-  //     ...(props.filter && {
-  //       where: {
-  //         name: { [Op.like]: `%${props.filter}%` },
-  //       },
-  //     }),
-  //     ...(props.sort && this.sortableFields.includes(props.sort)
-  //       ? //? { order: [[props.sort, props.sort_dir]] }
-  //       { order: this.formatSort(props.sort, props.sort_dir!) }
-  //       : { order: [['created_at', 'desc']] }),
-  //     offset,
-  //     limit,
-  //   });
-  //   return new CategorySearchResult({
-  //     items: models.map((model) => {
-  //       return CategoryModelMapper.toEntity(model);
-  //     }),
-  //     current_page: props.page,
-  //     per_page: props.per_page,
-  //     total: count,
-  //   });
-  // }
+  async search(props: CategorySearchParams): Promise<CategorySearchResult> {
+    const offset = (props.page - 1) * props.per_page;
+    const limit = props.per_page;
+    const { rows: models, count } = await this.categoryModel.findAndCountAll({
+      ...(props.filter && {
+        where: {
+          name: { [Op.like]: `%${props.filter}%` },
+        },
+      }),
+      ...(props.sort && this.sortableFields.includes(props.sort)
+        ? { order: this.formatSort(props.sort, props.sort_dir!) }
+        : { order: [['created_at', 'desc']] }),
+      offset,
+      limit,
+    });
+    return new CategorySearchResult({
+      items: models.map((model) => {
+        return CategoryModelMapper.toEntity(model);
+      }),
+      current_page: props.page,
+      per_page: props.per_page,
+      total: count,
+    });
+  }
 
-  // private formatSort(sort: string, sort_dir: SortDirection) {
-  //   const dialect = this.categoryModel.sequelize!.getDialect() as 'mysql';
-  //   if (this.orderBy[dialect] && this.orderBy[dialect][sort]) {
-  //     return this.orderBy[dialect][sort](sort_dir);
-  //   }
-  //   return [[sort, sort_dir]];
-  // }
-
-  search(query: SearchParams<string>): Promise<SearchResult<Entity>> {
-    throw new Error('Method not implemented.');
+  private formatSort(sort: string, sort_dir: SortDirection) {
+    const dialect = this.categoryModel.sequelize!.getDialect() as 'mysql';
+    // @ts-ignore
+    if (this.orderBy[dialect] && this.orderBy[dialect][sort]) {
+      // @ts-ignore
+      return this.orderBy[dialect][sort](sort_dir);
+    }
+    return [[sort, sort_dir]];
   }
 
   getEntity(): new (...args: any[]) => Category {

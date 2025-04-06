@@ -45,11 +45,15 @@ export abstract class InMemoryRepository<E extends Entity, EntityId extends Valu
   abstract getEntity(): new (...args: any[]) => E
 }
 
-export abstract class InMemorySearchableRepository<E extends Entity, EntityId extends ValueObject<any>>
+export abstract class InMemorySearchableRepository<
+  E extends Entity,
+  EntityId extends ValueObject<any>,
+  Filter = string
+>
   extends InMemoryRepository<E, EntityId>
-  implements ISearchableRepository<E, EntityId> {
+  implements ISearchableRepository<E, EntityId, Filter> {
   sortableFields: string[] = [];
-  async search(props: SearchParams): Promise<SearchResult> {
+  async search(props: SearchParams<Filter>): Promise<SearchResult<E>> {
     const itensFiltered = await this.applyFilter(Array.from(this.items.values()), props.filter);
     const itensSorted = this.applySort(itensFiltered, props.sort, props.sort_dir);
     const itensPaginated = this.applyPagination(itensSorted, props.page, props.per_page);
@@ -61,7 +65,7 @@ export abstract class InMemorySearchableRepository<E extends Entity, EntityId ex
     });
   }
 
-  protected abstract applyFilter(itens: E[], filter: string | null): Promise<E[]>;
+  protected abstract applyFilter(itens: E[], filter: Filter | null): Promise<E[]>;
 
   protected applySort(
     items: E[],
