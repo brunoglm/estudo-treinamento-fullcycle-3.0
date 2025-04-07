@@ -1,5 +1,5 @@
-import { Entity } from "../../../../domain/entity";
-import { Uuid } from "../../../../domain/value-objects/uuid.vo";
+import { Entity } from "../../../domain/entity";
+import { Uuid } from "../../../domain/value-objects/uuid.vo";
 import { InMemorySearchableRepository } from "./in-memory.repository";
 
 class StubEntityConstructor {

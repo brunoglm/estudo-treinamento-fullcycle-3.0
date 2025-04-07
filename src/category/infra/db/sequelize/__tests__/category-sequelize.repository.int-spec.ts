@@ -6,7 +6,7 @@ import {
   CategorySearchParams,
   CategorySearchResult,
 } from '../../../../domain/category.repository';
-import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
+import { setupSequelize } from '../../../../../shared/infra/db/helpers';
 import { Category } from '../../../../domain/category.entity';
 import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { CategoryFakeBuilder } from '../../../../domain/category-fake.builder';

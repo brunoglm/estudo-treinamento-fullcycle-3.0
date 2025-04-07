@@ -1,14 +1,12 @@
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
+import { Config } from '../config';
 
 export function setupSequelize(options: SequelizeOptions = {}) {
   let _sequelize: Sequelize;
 
   beforeAll(async () => {
     _sequelize = new Sequelize({
-      // ...Config.db(),
-      dialect: 'sqlite',
-      storage: ':memory:',
-      logging: false,
+      ...Config.db(),
       ...options,
     });
   });

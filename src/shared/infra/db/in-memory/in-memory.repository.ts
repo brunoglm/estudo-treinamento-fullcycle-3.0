@@ -1,9 +1,9 @@
-import { Entity } from "../../../../domain/entity";
-import { NotFoundError } from "../../../../domain/errors/not-found.error";
-import { IRepository, ISearchableRepository } from "../../../../domain/repository/repository-interface";
-import { SearchParams, SortDirection } from "../../../../domain/repository/search-params";
-import { SearchResult } from "../../../../domain/repository/search-result";
-import { ValueObject } from "../../../../domain/value-object";
+import { Entity } from "../../../domain/entity";
+import { NotFoundError } from "../../../domain/errors/not-found.error";
+import { IRepository, ISearchableRepository } from "../../../domain/repository/repository-interface";
+import { SearchParams, SortDirection } from "../../../domain/repository/search-params";
+import { SearchResult } from "../../../domain/repository/search-result";
+import { ValueObject } from "../../../domain/value-object";
 
 export abstract class InMemoryRepository<E extends Entity, EntityId extends ValueObject<any>> implements IRepository<E, EntityId> {
   protected items: Map<string, E> = new Map();
