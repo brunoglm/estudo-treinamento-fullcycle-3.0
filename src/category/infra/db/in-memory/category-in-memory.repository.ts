@@ -20,7 +20,7 @@ export class CategoryInMemoryRepository extends InMemorySearchableRepository<
     }
 
     return itens.filter((item) =>
-      item.name.toLowerCase() === filter.toLowerCase()
+      item.name.toLowerCase().includes(filter.toLowerCase())
     );
   }
 
