@@ -1,7 +1,8 @@
-import { IUseCase } from "../../shared/application/use-case.interface";
-import { SortDirection } from "../../shared/domain/repository/search-params";
-import { SearchResult } from "../../shared/domain/repository/search-result";
-import { CategoryFilter, CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../domain/category.repository";
+import { IUseCase } from "../../../shared/application/use-case.interface";
+import { SortDirection } from "../../../shared/domain/repository/search-params";
+import { SearchResult } from "../../../shared/domain/repository/search-result";
+import { CategoryFilter, CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../domain/category.repository";
+import { CategoryOutput, CategoryOutputMapper } from "./common/category-output";
 
 
 export class ListCategoriesUseCase
@@ -16,15 +17,7 @@ export class ListCategoriesUseCase
 
   private toOutput(searchResult: CategorySearchResult): ListCategoriesOutput {
     const { items: _items } = searchResult;
-    const items = _items.map((category) => {
-      return {
-        id: category.id.value,
-        name: category.name,
-        description: category.description,
-        is_active: category.is_active,
-        created_at: category.created_at,
-      }
-    });
+    const items = _items.map(CategoryOutputMapper.toOutput);
     return PaginationOutputMapper.toOutput(items, searchResult);
   }
 }
@@ -50,14 +43,6 @@ export type ListCategoriesInput = {
   sort?: string | null;
   sort_dir?: SortDirection | null;
   filter?: CategoryFilter | null;
-};
-
-export type CategoryOutput = {
-  id: string;
-  name: string;
-  description?: string | null;
-  is_active: boolean;
-  created_at: Date;
 };
 
 export type PaginationOutput<Item = any> = {
