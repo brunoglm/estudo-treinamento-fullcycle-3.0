@@ -1,140 +1,181 @@
-import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
-import { Category } from '../category.entity';
+import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
+import { Category } from "../category.entity";
 
-describe('Category Unit Tests', () => {
-  let validateSpy: jest.SpyInstance;
-
+describe('Category Without Validator Unit Tests', () => {
   beforeEach(() => {
-    validateSpy = jest.spyOn(Category, 'validate');
+    Category.prototype.validate = jest
+      .fn()
+      .mockImplementation(Category.prototype.validate);
+  });
+  test('constructor of category', () => {
+    let category = new Category({ name: 'Movie' });
+    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBeNull();
+    expect(category.is_active).toBe(true);
+    expect(category.created_at).toBeInstanceOf(Date);
+
+    let created_at = new Date();
+    category = new Category({
+      name: 'Movie',
+      description: 'some description',
+      is_active: false,
+      created_at,
+    });
+    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBe('some description');
+    expect(category.is_active).toBe(false);
+    expect(category.created_at).toBe(created_at);
+
+    category = new Category({
+      name: 'Movie',
+      description: 'other description',
+    });
+    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBe('other description');
+    expect(category.is_active).toBe(true);
+    expect(category.created_at).toBeInstanceOf(Date);
+
+    category = new Category({
+      name: 'Movie',
+      is_active: true,
+    });
+    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBeNull();
+    expect(category.is_active).toBe(true);
+    expect(category.created_at).toBeInstanceOf(Date);
+
+    created_at = new Date();
+    category = new Category({
+      name: 'Movie',
+      created_at,
+    });
+    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBeNull();
+    expect(category.is_active).toBe(true);
+    expect(category.created_at).toBe(created_at);
   });
 
   describe('create command', () => {
-    test('constructor', () => {
-      const category = new Category({
-        name: 'Movie',
-      });
-
-      expect(category.category_id).toBeDefined();
-      expect(category.name).toBe('Movie');
-      expect(category.description).toBeNull();
-      expect(category.is_active).toBeTruthy();
-      expect(category.created_at).toBeInstanceOf(Date);
-    });
-
     test('should create a category', () => {
       const category = Category.create({
         name: 'Movie',
-        description: 'A movie category',
-        is_active: true,
       });
-
-      expect(category.category_id).toBeDefined();
+      expect(category.category_id).toBeInstanceOf(Uuid);
       expect(category.name).toBe('Movie');
-      expect(category.description).toBe('A movie category');
-      expect(category.is_active).toBeTruthy();
+      expect(category.description).toBeNull();
+      expect(category.is_active).toBe(true);
       expect(category.created_at).toBeInstanceOf(Date);
-      expect(validateSpy).toHaveBeenCalledTimes(1);
+      expect(Category.prototype.validate).toHaveBeenCalledTimes(1);
+      expect(category.notification.hasErrors()).toBe(false);
     });
 
-    test('should throw error when name is empty', () => {
-      expect(() => Category.create({
-        name: null,
-      })).containsErrorMessages({
-        name: [
-          'name should not be empty',
-          'name must be a string',
-          'name must be shorter than or equal to 255 characters',
-        ],
-      });
-      expect(validateSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('change name method', () => {
-    test('should change name', () => {
-      const category = new Category({
+    test('should create a category with description', () => {
+      const category = Category.create({
         name: 'Movie',
+        description: 'some description',
       });
-
-      category.changeName('Documentary');
-
-      expect(category.name).toBe('Documentary');
+      expect(category.category_id).toBeInstanceOf(Uuid);
+      expect(category.name).toBe('Movie');
+      expect(category.description).toBe('some description');
+      expect(category.is_active).toBe(true);
+      expect(category.created_at).toBeInstanceOf(Date);
+      expect(Category.prototype.validate).toHaveBeenCalledTimes(1);
+      expect(category.notification.hasErrors()).toBe(false);
     });
-  });
 
-  describe('change description method', () => {
-    test('should change description', () => {
-      const category = new Category({
-        name: 'Movie',
-      });
-
-      category.changeDescription('A movie category');
-
-      expect(category.description).toBe('A movie category');
-    });
-  })
-
-  describe('activate method', () => {
-    test('should activate category', () => {
-      const category = new Category({
+    test('should create a category with is_active', () => {
+      const category = Category.create({
         name: 'Movie',
         is_active: false,
       });
-
-      category.activate();
-
-      expect(category.is_active).toBeTruthy();
+      expect(category.category_id).toBeInstanceOf(Uuid);
+      expect(category.name).toBe('Movie');
+      expect(category.description).toBeNull();
+      expect(category.is_active).toBe(false);
+      expect(category.created_at).toBeInstanceOf(Date);
+      expect(Category.prototype.validate).toHaveBeenCalledTimes(1);
+      expect(category.notification.hasErrors()).toBe(false);
     });
-  })
-
-  describe('deactivate method', () => {
-    test('should deactivate category', () => {
-      const category = new Category({
-        name: 'Movie',
-        is_active: true,
-      });
-
-      category.deactivate();
-
-      expect(category.is_active).toBeFalsy();
-    });
-  })
-
-  describe('toJSON method', () => {
-    test('should convert category to JSON', () => {
-      const category = new Category({
-        name: 'Movie',
-        description: 'A movie category',
-        is_active: true,
-      });
-
-      const json = category.toJSON();
-
-      expect(json).toEqual({
-        category_id: category.category_id.value,
-        name: 'Movie',
-        description: 'A movie category',
-        is_active: true,
-        created_at: category.created_at,
-      });
-    });
-  })
+  });
 
   describe('category_id field', () => {
-    const arrange = [
-      { category_id: undefined },
-      { category_id: null },
-      { category_id: '123e4567-e89b-12d3-a456-426614174000' },
-    ];
-    test.each(arrange)('id = %j', ({ category_id }) => {
-      const category = new Category({
-        name: 'Movie',
-        category_id: category_id as any,
-      });
+    const arrange = [{ id: null }, { id: undefined }, { id: new Uuid() }];
 
-      expect(category.category_id.value).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-      );
+    test.each(arrange)('should be is %j', (props) => {
+      const category = new Category(props as any);
+      expect(category.category_id).toBeInstanceOf(Uuid);
     });
-  })
-})
+  });
+
+  test('should change name', () => {
+    const category = new Category({
+      name: 'Movie',
+    });
+    category.changeName('other name');
+    expect(category.name).toBe('other name');
+    expect(Category.prototype.validate).toHaveBeenCalledTimes(1);
+    expect(category.notification.hasErrors()).toBe(false);
+  });
+
+  test('should change description', () => {
+    const category = new Category({
+      name: 'Movie',
+    });
+    category.changeDescription('some description');
+    expect(category.description).toBe('some description');
+    expect(category.notification.hasErrors()).toBe(false);
+  });
+
+  test('should active a category', () => {
+    const category = new Category({
+      name: 'Filmes',
+      is_active: false,
+    });
+    category.activate();
+    expect(category.is_active).toBe(true);
+    expect(category.notification.hasErrors()).toBe(false);
+  });
+
+  test('should disable a category', () => {
+    const category = new Category({
+      name: 'Filmes',
+      is_active: true,
+    });
+    category.deactivate();
+    expect(category.is_active).toBe(false);
+    expect(category.notification.hasErrors()).toBe(false);
+  });
+});
+
+describe('Category Validator', () => {
+  describe('create command', () => {
+    test('should an invalid category with name property', () => {
+      const category = Category.create({ name: 't'.repeat(256) });
+
+      expect(category.notification.hasErrors()).toBe(true);
+      expect(category.notification).notificationContainsErrorMessages([
+        {
+          name: ['name must be shorter than or equal to 255 characters'],
+        },
+      ]);
+    });
+  });
+
+  describe('changeName method', () => {
+    it('should a invalid category using name property', () => {
+      const category = Category.create({ name: 'Movie' });
+      category.changeName('t'.repeat(256));
+      expect(category.notification.hasErrors()).toBe(true);
+      expect(category.notification).notificationContainsErrorMessages([
+        {
+          name: ['name must be shorter than or equal to 255 characters'],
+        },
+      ]);
+    });
+  });
+});

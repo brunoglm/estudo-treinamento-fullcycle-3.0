@@ -21,10 +21,7 @@ export class CategoryModelMapper {
       created_at: model.created_at,
     });
 
-    Category.validate(category);
-    // if (category.notification.hasErrors()) {
-    //   throw new LoadEntityError(category.notification.toJSON());
-    // }
+    category.validate();
     return category;
   }
 }
