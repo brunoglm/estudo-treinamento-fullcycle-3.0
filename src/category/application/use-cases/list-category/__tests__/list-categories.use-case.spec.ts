@@ -1,6 +1,6 @@
-import { Category } from "../../../domain/category.entity";
-import { CategorySearchResult } from "../../../domain/category.repository";
-import { CategoryInMemoryRepository } from "../../../infra/db/in-memory/category-in-memory.repository";
+import { Category } from "../../../../domain/category.entity";
+import { CategorySearchResult } from "../../../../domain/category.repository";
+import { CategoryInMemoryRepository } from "../../../../infra/db/in-memory/category-in-memory.repository";
 import { ListCategoriesUseCase } from "../list-categories.use-case";
 
 

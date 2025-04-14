@@ -1,8 +1,8 @@
-import { IUseCase } from "../../../shared/application/use-case.interface";
-import { SortDirection } from "../../../shared/domain/repository/search-params";
-import { SearchResult } from "../../../shared/domain/repository/search-result";
-import { CategoryFilter, CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../domain/category.repository";
-import { CategoryOutput, CategoryOutputMapper } from "./common/category-output";
+import { IUseCase } from "../../../../shared/application/use-case.interface";
+import { SortDirection } from "../../../../shared/domain/repository/search-params";
+import { SearchResult } from "../../../../shared/domain/repository/search-result";
+import { CategoryFilter, CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../../domain/category.repository";
+import { CategoryOutput, CategoryOutputMapper } from "../common/category-output";
 
 
 export class ListCategoriesUseCase
