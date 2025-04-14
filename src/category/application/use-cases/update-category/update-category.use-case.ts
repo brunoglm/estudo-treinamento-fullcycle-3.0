@@ -5,11 +5,12 @@ import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../../domain/category.entity";
 import { ICategoryRepository } from "../../../domain/category.repository";
 import { CategoryOutput, CategoryOutputMapper } from "../common/category-output";
+import { UpdateCategoryInput } from "./update-category.input";
 
-export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryUseCaseInput, UpdateCategoryUseCaseOutput> {
+export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, UpdateCategoryUseCaseOutput> {
   constructor(private readonly categoryRepository: ICategoryRepository) { }
 
-  async execute(input: UpdateCategoryUseCaseInput): Promise<UpdateCategoryUseCaseOutput> {
+  async execute(input: UpdateCategoryInput): Promise<UpdateCategoryUseCaseOutput> {
     const categoryId = new Uuid(input.id);
 
     const category = await this.categoryRepository.findById(categoryId);
@@ -37,13 +38,6 @@ export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryUseCaseInpu
 
     return CategoryOutputMapper.toOutput(category);
   }
-}
-
-export type UpdateCategoryUseCaseInput = {
-  id: string;
-  name?: string;
-  description?: string | null;
-  is_active?: boolean | null;
 }
 
 export type UpdateCategoryUseCaseOutput = CategoryOutput
