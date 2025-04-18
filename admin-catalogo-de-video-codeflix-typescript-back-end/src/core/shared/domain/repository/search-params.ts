@@ -18,7 +18,7 @@ export class SearchParams<Filter = string> extends ValueObject<any> {
   protected _filter: Filter | null;
 
   constructor(props: SearchParamsConstructorProps<Filter> = {}) {
-    super();
+    super(null);
     this.page = props.page!;
     this.per_page = props.per_page!;
     this.sort = props.sort!;

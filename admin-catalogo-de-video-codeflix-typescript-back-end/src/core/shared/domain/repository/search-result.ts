@@ -16,7 +16,7 @@ export class SearchResult<E extends Entity = Entity> extends ValueObject<any> {
   readonly last_page: number;
 
   constructor(props: SearchResultConstructorProps<E>) {
-    super();
+    super(null);
     this.items = props.items;
     this.total = props.total;
     this.current_page = props.current_page;

@@ -7,14 +7,14 @@ export type CategoryConstructorProps = {
   category_id?: string;
   name: string;
   description?: string | null;
-  is_active?: boolean;
+  is_active?: boolean | null;
   created_at?: Date;
 }
 
 export type CategoryCreateCommand = {
   name: string;
   description?: string | null;
-  is_active?: boolean;
+  is_active?: boolean | null;
 }
 
 export class Category extends Entity {
