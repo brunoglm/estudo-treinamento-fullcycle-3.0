@@ -1,6 +1,6 @@
-import { EntityValidationError } from "../../../../shared/domain/validators/validation.error";
-import { CategoryInMemoryRepository } from "../../../infra/db/in-memory/category-in-memory.repository";
-import { CreateCategoryUseCase } from "../create-category/create-category.use-case";
+import { CategoryInMemoryRepository } from "@core/category/infra/db/in-memory/category-in-memory.repository";
+import { CreateCategoryUseCase } from "../create-category.use-case";
+import { EntityValidationError } from "@core/shared/domain/validators/validation.error";
 
 describe('CreateCategoryUseCase Unit Tests', () => {
   let useCase: CreateCategoryUseCase;
@@ -14,7 +14,7 @@ describe('CreateCategoryUseCase Unit Tests', () => {
   it('should throw an error when aggregate is not valid', async () => {
     const input = { name: 't'.repeat(256) };
     await expect(() => useCase.execute(input)).rejects.toThrow(
-      new EntityValidationError(null, 'Entity validation error'),
+      new EntityValidationError(null),
     );
   });
 
