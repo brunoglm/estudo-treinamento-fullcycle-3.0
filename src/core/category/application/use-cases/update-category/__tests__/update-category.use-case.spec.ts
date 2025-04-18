@@ -35,7 +35,7 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
         id: aggregate.category_id.value,
         name: 't'.repeat(256),
       }),
-    ).rejects.toThrow(new EntityValidationError(null, 'Entity validation error'));
+    ).rejects.toThrow(new EntityValidationError({} as any));
   });
 
   it('should update a category', async () => {
