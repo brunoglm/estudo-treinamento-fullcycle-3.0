@@ -28,9 +28,9 @@ export class CategoriesController {
   constructor() { }
 
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryInput) {
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
     const output = await this.createUseCase.execute(createCategoryDto)
-    return {} as any
+    return output
   }
 
   @Get()
