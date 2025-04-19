@@ -10,6 +10,11 @@ export class Config {
     return {
       dialect: Config.env.DB_VENDOR,
       host: Config.env.DB_HOST,
+      port: Config.env.DB_PORT,
+      username: Config.env.DB_USERNAME,
+      password: Config.env.DB_PASSWORD,
+      database: Config.env.DB_DATABASE,
+      autoLoadModels: Config.env.DB_AUTO_LOAD_MODELS,
       storage: Config.env.DB_HOST,
       logging: Config.env.DB_LOGGING === 'true',
     };
