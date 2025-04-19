@@ -9,6 +9,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       host: ':memory:',
       logging: false,
       models: [CategoryModel],
+      autoLoadModels: true,
     }),
   ],
 })
