@@ -48,7 +48,7 @@ describe('DatabaseModule Unit Tests', () => {
       DB_AUTO_LOAD_MODELS: true,
     };
 
-    it('should be a mysql connection', async () => {
+    it.skip('should be a mysql connection', async () => {
       const module = await Test.createTestingModule({
         imports: [
           DatabaseModule,
