@@ -1,4 +1,4 @@
-import { ValueObject } from '../shared/domain/value-object';
+import { ValueObject } from '../nest-modules/shared-module/domain/value-object';
 import { FieldsErrors } from './shared/domain/validators/validator-fields-interface';
 
 declare global {
