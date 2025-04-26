@@ -5,10 +5,10 @@ import { ICategoryRepository } from "../../../domain/category.repository";
 import { CategoryOutput, CategoryOutputMapper } from "../common/category-output";
 import { CreateCategoryInput } from "./create-category.input";
 
-export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, CreateCategoryUseCaseOutput> {
+export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, CreateCategoryOutput> {
   constructor(private readonly categoryRepository: ICategoryRepository) { }
 
-  async execute(input: CreateCategoryInput): Promise<CreateCategoryUseCaseOutput> {
+  async execute(input: CreateCategoryInput): Promise<CreateCategoryOutput> {
     const category = Category.create(input);
     if (category.notification.hasErrors()) {
       throw new EntityValidationError(category.notification.toJSON());
@@ -18,4 +18,4 @@ export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, Crea
   }
 }
 
-export type CreateCategoryUseCaseOutput = CategoryOutput
+export type CreateCategoryOutput = CategoryOutput

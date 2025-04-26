@@ -7,10 +7,10 @@ import { ICategoryRepository } from "../../../domain/category.repository";
 import { CategoryOutput, CategoryOutputMapper } from "../common/category-output";
 import { UpdateCategoryInput } from "./update-category.input";
 
-export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, UpdateCategoryUseCaseOutput> {
+export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput> {
   constructor(private readonly categoryRepository: ICategoryRepository) { }
 
-  async execute(input: UpdateCategoryInput): Promise<UpdateCategoryUseCaseOutput> {
+  async execute(input: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
     const categoryId = new Uuid(input.id);
 
     const category = await this.categoryRepository.findById(categoryId);
@@ -20,7 +20,9 @@ export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, Upda
 
     input.name && category.changeName(input.name);
 
-    input.description && category.changeDescription(input.description);
+    if (input.description !== undefined) {
+      category.changeDescription(input.description);
+    }
 
     if (input.is_active === true) {
       category.activate();
@@ -40,4 +42,4 @@ export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, Upda
   }
 }
 
-export type UpdateCategoryUseCaseOutput = CategoryOutput
+export type UpdateCategoryOutput = CategoryOutput
