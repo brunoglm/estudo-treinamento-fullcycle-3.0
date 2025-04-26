@@ -4,7 +4,7 @@ const _keysInResponse = [
   'id',
   'name',
   'description',
-  // 'is_active',
+  'is_active',
   'created_at',
 ];
 
